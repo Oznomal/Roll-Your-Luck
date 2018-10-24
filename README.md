@@ -1,7 +1,7 @@
 # Roll-Your-Luck
 Roll Your Luck | A simple JavaScript Game
 
-/*
+
                                                     GAME RULES:
 - The game has 2 players, playing in rounds.
 - In each turn, a player rolls a dice as many times as they whish. 
@@ -12,4 +12,3 @@ Roll Your Luck | A simple JavaScript Game
   After that, it's the next player's turn.
   
 - The first player to reach 50 points on GLOBAL score wins the game.
-*/
