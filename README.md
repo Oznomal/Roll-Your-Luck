@@ -12,3 +12,5 @@ Roll Your Luck | A simple JavaScript Game
   After that, it's the next player's turn.
   
 - The first player to reach 50 points on GLOBAL score wins the game.
+
+Play the game at the following link: https://roll-your-luck.herokuapp.com/index.html
