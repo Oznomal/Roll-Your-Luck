@@ -1,7 +1,6 @@
 # Roll-Your-Luck
 Roll Your Luck | A simple JavaScript Game
 
-//----------------------------------------------------------------------------------------------------------//
 /*
                                                     GAME RULES:
 - The game has 2 players, playing in rounds.
@@ -14,4 +13,3 @@ Roll Your Luck | A simple JavaScript Game
   
 - The first player to reach 50 points on GLOBAL score wins the game.
 */
-//----------------------------------------------------------------------------------------------------------//
