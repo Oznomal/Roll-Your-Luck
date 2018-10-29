@@ -40,20 +40,20 @@ function init(){
 
     //Hide the dice
     document.querySelector('.dice').style.display = 'none';
-    
+
     //Set the names of the players (to remnove 'WINNER' if needed)
     document.getElementById('name-0').textContent = 'Player 1';
     document.getElementById('name-1').textContent = 'Player 2';
-    
+
     //Remove Winning and Active classes from both players
     document.querySelector('.player-0-panel').classList.remove('winner');
     document.querySelector('.player-1-panel').classList.remove('winner');
     document.querySelector('.player-0-panel').classList.remove('active');
     document.querySelector('.player-1-panel').classList.remove('active');
-    
+
     //Set player 1 to the active player
     document.querySelector('.player-0-panel').classList.add('active');
-    
+
     //Set the state to true
     gamePlaying = true;
 }
@@ -63,7 +63,7 @@ function init(){
 
 //== HANDLE THE ACTION WHEN THE ROLL BUTTON IS CLIKCED ==
 document.querySelector('.btn-roll').addEventListener('click', function(){
-    
+
     if(gamePlaying){
         //1. We need a random number
         var dice = Math.floor(Math.random() * 6) + 1;
@@ -88,7 +88,7 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
 //------------------------------------------------------------------------------------//
 
 //== HANDLE THE ACTION WHEN THE HOLD BUTTON IS CLIKCED ==
-document.querySelector('.btn-hold').addEventListener('click', function(){  
+document.querySelector('.btn-hold').addEventListener('click', function(){
     if(gamePlaying){
         //1. Add the current score to the players global score
         scores[activePlayer] += roundScore;
@@ -105,7 +105,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
             gamePlaying = false;
         }else{
             switchPlayers();
-        }   
+        }
     }
 });
 
@@ -114,19 +114,19 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 
 //== HANDLE SCENARIOS WHEN WE SWITCH FROM ONE PLAYER TO THE NEXT ==
 function switchPlayers(){
-        activePlayer === 0? activePlayer = 1 : activePlayer = 0;
-        roundScore = 0;
-        
-        //Reset the round score of both players in the UI
-        document.getElementById('current-0').textContent = 0;
-        document.getElementById('current-1').textContent = 0;
-        
-        //Toggle the active class between the players to reflect who's turn it is
-        document.querySelector('.player-0-panel').classList.toggle('active');
-        document.querySelector('.player-1-panel').classList.toggle('active');
-        
-        //Hide the dice when switching players
-        document.querySelector('.dice').style.display = 'none';
+    activePlayer === 0? activePlayer = 1 : activePlayer = 0;
+    roundScore = 0;
+
+    //Reset the round score of both players in the UI
+    document.getElementById('current-0').textContent = 0;
+    document.getElementById('current-1').textContent = 0;
+
+    //Toggle the active class between the players to reflect who's turn it is
+    document.querySelector('.player-0-panel').classList.toggle('active');
+    document.querySelector('.player-1-panel').classList.toggle('active');
+
+    //Hide the dice when switching players
+    document.querySelector('.dice').style.display = 'none';
 }
 
 //------------------------------------------------------------------------------------//
