@@ -46,9 +46,10 @@
     
 <div class="modal-overlay" id="modal-overlay"></div>
 <div class="settings-modal">
-    <div class="settings-modal-content">
+    <div class="game-settings-form">
         <h2 class="header-text"><i class="ion-ios-toggle-outline settings-modal-icon"></i>Game Settings</h2>
-        <div class="game-settings-form">
+
+        <div class="settings-left-col">
             <div class="game-settings-form-row">
                 <label>Player 1 Name</label>
                 <br />
@@ -66,11 +67,30 @@
                 <br/>
                 <input id="winning-score-input" class="small-input"/>
             </div>
-
-            <div class="setting-buttons">
-                <button id="btn-cancel-game-settings" >Cancel</button>
-                <button id="btn-save-game-settings">Save</button>
+        </div>
+        <div class="settings-right-col">
+            <div class="game-settings-form-row">
+                <label>Player 1 Name</label>
+                <br />
+                <input id="player-0-name" class="player-name-input"/>
             </div>
+
+            <div class="game-settings-form-row">
+                <label>Player 2 Name</label>
+                <br/>
+                <input id="player-1-name" class="player-name-input"/>
+            </div>
+
+            <div class="game-settings-form-row">
+                <label>Winning Score</label>
+                <br/>
+                <input id="winning-score-input" class="small-input"/>
+            </div>
+        </div>
+
+        <div class="setting-buttons">
+            <button id="btn-cancel-game-settings" >Cancel</button>
+            <button id="btn-save-game-settings">Save</button>
         </div>
     </div>
 </div>
