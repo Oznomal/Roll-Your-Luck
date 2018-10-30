@@ -13,7 +13,7 @@
 <body>
 <div class="wrapper clearfix">
     <div class="player-0-panel active">
-        <div class="player-name" id="name-0">Player 1</div>
+        <div class="player-name" id="name-0"></div>
         <div class="player-score" id="score-0"></div>
         <div class="player-current-box">
             <div class="player-current-label">Current</div>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="player-1-panel">
-        <div class="player-name" id="name-1">Player 2</div>
+        <div class="player-name" id="name-1"></div>
         <div class="player-score" id="score-1"></div>
         <div class="player-current-box">
             <div class="player-current-label">Current</div>
@@ -36,31 +36,44 @@
 
     <p class="sub-rules-text">Rolling a 1 resets your round score</p>
 
-    <button class="btn-new"><i class="ion-ios-plus-outline"></i>New game</button>
-    <button class="btn-roll"><i class="ion-ios-loop"></i>Roll dice</button>
-    <button class="btn-hold"><i class="ion-ios-download-outline"></i>Hold</button>
-    <button class="btn-settings"><i class="ion-ios-toggle-outline"></i>Settings</button>
+    <button class="btn-new button-center"><i class="ion-ios-plus-outline"></i>New game</button>
+    <button class="btn-roll button-center"><i class="ion-ios-loop"></i>Roll dice</button>
+    <button class="btn-hold button-center"><i class="ion-ios-download-outline"></i>Hold</button>
+    <button class="btn-settings button-center"><i class="ion-ios-toggle-outline"></i>Settings</button>
 
     <img src="dice-5.png" alt="Dice" class="dice">
-
-    <div class="settings-modal">
-        <div class="settings-modal-content">
-            <h2 class="header-text"><i class="ion-ios-toggle-outline settings-modal-icon"></i>Game Settings</h2>
-
-            <div class="game-settings-form">
-                <label>Player 1 Identifier: </label>
-                <input/>
+</div>
+    
+<div class="modal-overlay" id="modal-overlay"></div>
+<div class="settings-modal">
+    <div class="settings-modal-content">
+        <h2 class="header-text"><i class="ion-ios-toggle-outline settings-modal-icon"></i>Game Settings</h2>
+        <div class="game-settings-form">
+            <div class="game-settings-form-row">
+                <label>Player 1 Name</label>
                 <br />
-                <lable>Player 2 Identifier: </lable>
-                <input/>
-                <br />
+                <input id="player-0-name" class="player-name-input"/>
+            </div>
 
+            <div class="game-settings-form-row">
+                <label>Player 2 Name</label>
+                <br/>
+                <input id="player-1-name" class="player-name-input"/>
+            </div>
+
+            <div class="game-settings-form-row">
+                <label>Winning Score</label>
+                <br/>
+                <input id="winning-score-input" class="small-input"/>
+            </div>
+
+            <div class="setting-buttons">
+                <button id="btn-cancel-game-settings" >Cancel</button>
+                <button id="btn-save-game-settings">Save</button>
             </div>
         </div>
     </div>
-
 </div>
-
 
 <script src="app.js"></script>
 </body>

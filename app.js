@@ -17,7 +17,7 @@
 //----------------------------------------------------------------------------------------------------------//
 
 //== FIELDS ==
-var scores, roundScore, activePlayer, gamePlaying;
+var scores, roundScore, activePlayer, gamePlaying, settingsModal, player0Name, player1Name, winningScore;
 
 //------------------------------------------------------------------------------------//
 
@@ -31,19 +31,20 @@ function init(){
     scores = [0,0];
     roundScore = 0;
     activePlayer = 0;
+    settingsModal = document.querySelector('.settings-modal');
 
     //Set UI scores to 0
     document.getElementById('score-0').textContent = '0';
     document.getElementById('score-1').textContent = '0';
     document.getElementById('current-0').textContent = '0';
     document.getElementById('current-1').textContent = '0';
-
+    
     //Hide the dice
     document.querySelector('.dice').style.display = 'none';
 
     //Set the names of the players (to remnove 'WINNER' if needed)
-    document.getElementById('name-0').textContent = 'Player 1';
-    document.getElementById('name-1').textContent = 'Player 2';
+    updatePlayerNames();
+    updateWinningScore();
 
     //Remove Winning and Active classes from both players
     document.querySelector('.player-0-panel').classList.remove('winner');
@@ -60,6 +61,31 @@ function init(){
 
 //------------------------------------------------------------------------------------//
 
+//== UPDATE THE NAMES OF THE PLAYERS WITHIN THE UI ==
+function updatePlayerNames(){
+        
+    if(player0Name === undefined || player0Name.trim().length === 0){
+        player0Name = 'Player 1'
+    }
+    
+    if(player1Name === undefined || player1Name.trim().length === 0){
+        player1Name = 'Player 2'
+    }
+        
+    document.getElementById('name-0').textContent = player0Name;
+    document.getElementById('name-1').textContent = player1Name;
+}
+
+//------------------------------------------------------------------------------------//
+
+//== UPDATE THE WINNING SCORE OF THE GAME ==
+function updateWinningScore(){
+    if(winningScore === undefined || winningScore < 25 || winningScore > 999){
+        winningScore = 100;
+    }
+    
+    document.querySelector('.header-text').textContent = `First Player to ${winningScore} Wins!`;
+}
 
 //== HANDLE THE ACTION WHEN THE ROLL BUTTON IS CLIKCED ==
 document.querySelector('.btn-roll').addEventListener('click', function(){
@@ -97,7 +123,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
         //3. Check if the player has won the game
-        if(scores[activePlayer] >= 50){
+        if(scores[activePlayer] >= winningScore){
             document.querySelector('#name-' + activePlayer).textContent = 'WINNER!';
             document.querySelector('.dice').style.display = 'none';
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
@@ -134,4 +160,49 @@ function switchPlayers(){
 //== HANDLE THE ACTION WHEN THE NEW GAME BUTTON IS PRESSED ==
 document.querySelector('.btn-new').addEventListener('click', init);
 
+//------------------------------------------------------------------------------------//
+
+//== HANDLE THE ACTION WHEN THE SETTINGS BUTTON IS CLICKED ==
+document.querySelector('.btn-settings').addEventListener('click', function(){
+    document.getElementById('player-0-name').placeholder = player0Name;
+    document.getElementById('player-1-name').placeholder = player1Name;
+    document.getElementById('winning-score-input').placeholder = winningScore;
+    openModal(settingsModal);
+    document.getElementById('player-0-name').focus();
+});
+
+//== HANDLE ACTION WHEN THE CANCEL BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
+document.getElementById('btn-cancel-game-settings').addEventListener('click', function(){
+    closeModal(settingsModal);
+});
+
+//== HANDLE ACTION WHEN THE SAVE BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
+document.getElementById('btn-save-game-settings').addEventListener('click', function(){
+    //Get the values from the input field
+    player0Name = document.getElementById('player-0-name').value;
+    player1Name = document.getElementById('player-1-name').value;
+    winningScore = document.getElementById('winning-score-input').value;
+    
+    //Reset the Input Values
+    document.getElementById('player-0-name').value = "";
+    document.getElementById('player-1-name').value = "";
+    document.getElementById('winning-score-input').value = "";
+    
+    //Restart the game and  close the modal
+    init();
+    closeModal(settingsModal);
+});
+
+
+//------------------------------------------------------------------------------------//
+//== GENERAL FUNCTIONS THAT MAY BE REUSED LATER ==
+function openModal(modal){
+    document.getElementById('modal-overlay').style.display = 'block';
+    modal.style.display = 'block';
+}
+
+function closeModal(modal){
+    document.getElementById('modal-overlay').style.display = 'none';
+    modal.style.display = 'none';
+}
 //------------------------------------------------------------------------------------//
