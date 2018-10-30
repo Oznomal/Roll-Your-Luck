@@ -177,7 +177,17 @@ document.getElementById('btn-cancel-game-settings').addEventListener('click', fu
 });
 
 //== HANDLE ACTION WHEN THE SAVE BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
-document.getElementById('btn-save-game-settings').addEventListener('click', function(){
+document.getElementById('btn-save-game-settings').addEventListener('click', saveGameSettings);
+
+//== HANDLE ACTION WHEN ENTER IS PRESSED FROM WITHIN THE SETTINGS MODAL ==
+document.addEventListener('keypress', function(event){
+   if(settingsModal.style.display === 'block' && event.which === 13){
+        saveGameSettings();
+   }
+});
+
+//== SAVE THE SETTINGS OF THE GAME ==
+function saveGameSettings(){
     //Get the values from the input field
     player0Name = document.getElementById('player-0-name').value;
     player1Name = document.getElementById('player-1-name').value;
@@ -191,7 +201,7 @@ document.getElementById('btn-save-game-settings').addEventListener('click', func
     //Restart the game and  close the modal
     init();
     closeModal(settingsModal);
-});
+}
 
 
 //------------------------------------------------------------------------------------//
