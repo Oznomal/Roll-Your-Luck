@@ -17,7 +17,9 @@
 //----------------------------------------------------------------------------------------------------------//
 
 //== FIELDS ==
-var scores, roundScore, activePlayer, gamePlaying, settingsModal, player0Name, player1Name, winningScore;
+var scores, roundScore, activePlayer, gamePlaying,
+    settingsModal, player0Name, player1Name, winningScore,
+    twoDiceMode, doubleSixMode, highStakesMode;
 
 //------------------------------------------------------------------------------------//
 
@@ -42,9 +44,8 @@ function init(){
     //Hide the dice
     document.querySelector('.dice').style.display = 'none';
 
-    //Set the names of the players (to remnove 'WINNER' if needed)
-    updatePlayerNames();
-    updateWinningScore();
+    //Updates the game settings or sets undefined values to defaults if needed
+    updateSettings();
 
     //Remove Winning and Active classes from both players
     document.querySelector('.player-0-panel').classList.remove('winner');
@@ -57,9 +58,16 @@ function init(){
 
     //Set the state to true
     gamePlaying = true;
+    console.log(doubleSixMode, highStakesMode, twoDiceMode);
 }
 
 //------------------------------------------------------------------------------------//
+function updateSettings(){
+    updatePlayerNames();
+    updateWinningScore();
+    updateToggleSettings();
+}
+
 
 //== UPDATE THE NAMES OF THE PLAYERS WITHIN THE UI ==
 function updatePlayerNames(){
@@ -86,6 +94,50 @@ function updateWinningScore(){
     
     document.querySelector('.header-text').textContent = `First Player to ${winningScore} Wins!`;
 }
+
+//------------------------------------------------------------------------------------//
+
+//== UPDATE THE TOGGLE SETTINGS OF THE GAME ==
+function updateToggleSettings(){
+    var twoDiceToggle, doubleSixToggle, highStakesToggle,
+        twoDiceLabel, doubleSixLabel, highStakesLabel;
+
+    twoDiceMode = (twoDiceMode === undefined) ? false : twoDiceMode;
+    doubleSixMode = (doubleSixMode === undefined) ? false : doubleSixMode;
+    highStakesMode = (highStakesMode === undefined) ? false : highStakesMode;
+
+    twoDiceToggle = document.getElementById('toggle-number-of-dice');
+    doubleSixToggle = document.getElementById('toggle-double-six');
+    highStakesToggle = document.getElementById('toggle-high-stakes');
+
+    twoDiceToggle.checked = (twoDiceMode) ? true : false;
+    doubleSixToggle.checked = (doubleSixMode) ? true : false;
+    highStakesToggle.checked = (highStakesMode) ? true : false;
+
+    twoDiceLabel = document.getElementById('number-of-dice-label');
+    doubleSixLabel = document.getElementById('double-six-label');
+    highStakesLabel = document.getElementById('high-stakes-label');
+
+    twoDiceLabel.textContent = (twoDiceMode) ? '2 is always better!' : '1';
+    doubleSixLabel.textContent = (doubleSixMode) ? 'Do it for the Six!' : 'Off';
+    highStakesLabel.textContent = (highStakesMode) ? 'Riskssskyyy!' : 'Off';
+
+    if(!twoDiceMode){
+        twoDiceLabel.classList.remove('setting-on-label');
+    }
+
+    if(!doubleSixMode){
+        doubleSixLabel.classList.remove('setting-on-label');
+    }
+
+    if(!highStakesMode){
+        highStakesLabel.classList.remove('setting-on-label');
+    }
+
+}
+
+
+//------------------------------------------------------------------------------------//
 
 //== HANDLE THE ACTION WHEN THE ROLL BUTTON IS CLIKCED ==
 document.querySelector('.btn-roll').addEventListener('click', function(){
@@ -171,9 +223,51 @@ document.querySelector('.btn-settings').addEventListener('click', function(){
     document.getElementById('player-0-name').focus();
 });
 
-//== HANDLE ACTION WHEN THE CANCEL BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
-document.getElementById('btn-cancel-game-settings').addEventListener('click', function(){
-    closeModal(settingsModal);
+//== HANDLE WHEN NUMBER OF DICE IS TOGGLED IN THE SETTINGS MENU ==
+document.getElementById('toggle-number-of-dice').addEventListener('click', function(){
+    var label;
+
+    label = document.getElementById('number-of-dice-label');
+
+    if(document.getElementById('toggle-number-of-dice').checked){
+        label.textContent = '2 is always better!'
+    }else{
+        label.textContent = '1';
+    }
+
+    label.classList.toggle('setting-on-label');
+});
+
+
+//== HANDLE WHEN DOUBLE SIX'S IS TOGGLED IN THE SETTINGS MENU ==
+document.getElementById('toggle-double-six').addEventListener('click', function(){
+    var label;
+
+    label = document.getElementById('double-six-label');
+
+    if(document.getElementById('toggle-double-six').checked){
+        label.textContent = 'Do it for the Six!'
+    }else{
+        label.textContent = 'Off';
+    }
+
+    label.classList.toggle('setting-on-label');
+});
+
+
+//== HANDLE WHEN HIGH STAKES MODE IS TOGGLED IN THE SETTINGS MENU ==
+document.getElementById('toggle-high-stakes').addEventListener('click', function(){
+    var label;
+
+    label = document.getElementById('high-stakes-label');
+
+    if(document.getElementById('toggle-high-stakes').checked){
+        label.textContent = 'Riskssskyyy!'
+    }else{
+        label.textContent = 'Off';
+    }
+
+    label.classList.toggle('setting-on-label');
 });
 
 //== HANDLE ACTION WHEN THE SAVE BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
@@ -192,6 +286,9 @@ function saveGameSettings(){
     player0Name = document.getElementById('player-0-name').value;
     player1Name = document.getElementById('player-1-name').value;
     winningScore = document.getElementById('winning-score-input').value;
+    twoDiceMode = document.getElementById('toggle-number-of-dice').checked;
+    doubleSixMode = document.getElementById('toggle-double-six').checked;
+    highStakesMode = document.getElementById('toggle-high-stakes').checked;
     
     //Reset the Input Values
     document.getElementById('player-0-name').value = "";
@@ -202,6 +299,12 @@ function saveGameSettings(){
     init();
     closeModal(settingsModal);
 }
+
+//== HANDLE ACTION WHEN THE CANCEL BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
+document.getElementById('btn-cancel-game-settings').addEventListener('click', function(){
+    updateToggleSettings();
+    closeModal(settingsModal);
+});
 
 
 //------------------------------------------------------------------------------------//

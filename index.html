@@ -31,7 +31,6 @@
     </div>
 
     <h2 class="header-text">
-        First Player to 50 Wins!
     </h2>
 
     <p class="sub-rules-text">Rolling a 1 resets your round score</p>
@@ -51,40 +50,54 @@
 
         <div class="settings-left-col">
             <div class="game-settings-form-row">
-                <label>Player 1 Name</label>
+                <label class="setting-label">Player 1 Name</label>
                 <br />
                 <input id="player-0-name" class="player-name-input"/>
             </div>
 
             <div class="game-settings-form-row">
-                <label>Player 2 Name</label>
+                <label class="setting-label">Player 2 Name</label>
                 <br/>
                 <input id="player-1-name" class="player-name-input"/>
             </div>
 
             <div class="game-settings-form-row">
-                <label>Winning Score</label>
+                <label class="setting-label">Winning Score</label>
                 <br/>
                 <input id="winning-score-input" class="small-input"/>
             </div>
         </div>
         <div class="settings-right-col">
             <div class="game-settings-form-row">
-                <label>Number of Dice</label>
+                <label class="setting-label">Number of Dice</label>
                 <br />
-                <input id="player-0-name" class="player-name-input"/>
+
+                <label class="switch double-option-slider">
+                    <input type="checkbox" id="toggle-number-of-dice">
+                    <span class="slider"></span>
+                </label>
+                <label class="slider-label-right" id="number-of-dice-label">1</label>
             </div>
 
             <div class="game-settings-form-row">
-                <label>Double 6's</label>
+                <label class="setting-label">Double 6's</label>
                 <br/>
-                <input id="player-1-name" class="player-name-input"/>
+                <label class="switch single-option-slider">
+                    <input type="checkbox" id="toggle-double-six">
+                    <span class="slider"></span>
+                </label>
+                <label class="slider-label-right" id="double-six-label">Off</label>
+
             </div>
 
             <div class="game-settings-form-row">
-                <label>High Risk, High Reward</label>
+                <label class="setting-label">High Stakes Mode</label>
                 <br/>
-                <input id="winning-score-input" class="small-input"/>
+                <label class="switch single-option-slider">
+                    <input type="checkbox" id="toggle-high-stakes">
+                    <span class="slider"></span>
+                </label>
+                <label class="slider-label-right" id="high-stakes-label">Off</label>
             </div>
         </div>
 
