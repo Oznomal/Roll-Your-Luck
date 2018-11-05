@@ -20,7 +20,7 @@
 var scores, roundScore, activePlayer, gamePlaying,
     settingsModal, player0Name, player1Name, winningScore,
     twoDiceMode, doubleSixMode, highStakesMode,
-    lastRoll;
+    lastRoll, rollCount, multiplierThreshhold;
 
 //------------------------------------------------------------------------------------//
 
@@ -35,6 +35,8 @@ function init(){
     roundScore = 0;
     activePlayer = 0;
     lastRoll = 0;
+    rollCount = 0;
+    multiplierThreshhold = 5;
     settingsModal = document.querySelector('.settings-modal');
 
     //Set UI scores to 0
@@ -134,6 +136,7 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         //1. We need a random number
         var dice = Math.floor(Math.random() * 6) + 1;
 
+
         //2. Display the result
         var diceDOM =  document.querySelector('.dice');
         diceDOM.style.display = 'block';
@@ -144,7 +147,7 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
            (doubleSixMode && !twoDiceMode && lastRoll === 6 && dice === 6)){
             switchPlayers();
         }else{
-            roundScore += dice;
+            roundScore += (highStakesMode && ++rollCount >= multiplierThreshhold) ? dice * 2 : dice;
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
             lastRoll = dice;
         }
@@ -183,6 +186,7 @@ function switchPlayers(){
     activePlayer === 0? activePlayer = 1 : activePlayer = 0;
     roundScore = 0;
     lastRoll = 0;
+    rollCount = 0;
 
     //Reset the round score of both players in the UI
     document.getElementById('current-0').textContent = 0;
