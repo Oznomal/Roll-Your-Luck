@@ -100,7 +100,7 @@ function updateWinningScore(){
 
 //== UPDATE THE TOGGLE SETTINGS OF THE GAME ==
 function updateToggleSettings(){
-    var twoDiceLabel, doubleSixLabel, highStakesLabel;
+    var twoDiceLabel, doubleSixLabel, highStakesLabel, dieOneDOM, dieTwoDOM;
 
     //Set the mode to false if undefined or keep it the same if defined
     twoDiceMode = (twoDiceMode === undefined) ? false : twoDiceMode;
@@ -117,15 +117,33 @@ function updateToggleSettings(){
     doubleSixLabel = document.getElementById('double-six-label');
     highStakesLabel = document.getElementById('high-stakes-label');
 
+    dieOneDOM = document.getElementById('dice-1');
+    dieTwoDOM = document.getElementById('dice-2');
+
     twoDiceLabel.textContent = (twoDiceMode) ? '2 is always better!' : '1';
     doubleSixLabel.textContent = (doubleSixMode) ? 'Do it for the Six!' : 'Off';
     highStakesLabel.textContent = (highStakesMode) ? 'Riskssskyyy!' : 'Off';
 
-    (twoDiceMode) ? twoDiceLabel.classList.add('setting-on-label') : twoDiceLabel.classList.remove('setting-on-label');
     (doubleSixMode) ? doubleSixLabel.classList.add('setting-on-label') : doubleSixLabel.classList.remove('setting-on-label');
     (highStakesMode) ? highStakesLabel.classList.add('setting-on-label') : highStakesLabel.classList.remove('setting-on-label');
-}
 
+    //Add two dice to the UI if 2 dice mode is enabled
+    if(twoDiceMode){
+        dieOneDOM.classList.remove('single-die');
+        dieOneDOM.classList.add('left-die');
+        dieOneDOM.style.display = 'block';
+        dieTwoDOM.style.display = 'block';
+        twoDiceLabel.classList.add('setting-on-label')
+    }else{
+        dieOneDOM.classList.remove('left-die');
+        dieOneDOM.classList.remove('single-die');
+        dieOneDOM.classList.add('single-die');
+        dieOneDOM.style.display = 'block';
+        dieTwoDOM.style.display = 'none';
+        twoDiceLabel.classList.remove('setting-on-label');
+    }
+
+}
 
 //------------------------------------------------------------------------------------//
 
