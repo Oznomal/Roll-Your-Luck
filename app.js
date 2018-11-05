@@ -44,12 +44,12 @@ function init(){
     document.getElementById('score-1').textContent = '0';
     document.getElementById('current-0').textContent = '0';
     document.getElementById('current-1').textContent = '0';
-    
-    //Hide the dice
-    document.querySelector('.dice').style.display = 'none';
 
     //Updates the game settings or sets undefined values to defaults if needed
     updateSettings();
+
+    //Hide the dice
+    document.querySelector('.dice').style.display = 'none';
 
     //Remove Winning and Active classes from both players
     document.querySelector('.player-0-panel').classList.remove('winner');
