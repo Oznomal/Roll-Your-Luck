@@ -19,7 +19,8 @@
 //== FIELDS ==
 var scores, roundScore, activePlayer, gamePlaying,
     settingsModal, player0Name, player1Name, winningScore,
-    twoDiceMode, doubleSixMode, highStakesMode;
+    twoDiceMode, doubleSixMode, highStakesMode,
+    lastRoll;
 
 //------------------------------------------------------------------------------------//
 
@@ -33,6 +34,7 @@ function init(){
     scores = [0,0];
     roundScore = 0;
     activePlayer = 0;
+    lastRoll = 0;
     settingsModal = document.querySelector('.settings-modal');
 
     //Set UI scores to 0
@@ -62,6 +64,7 @@ function init(){
 }
 
 //------------------------------------------------------------------------------------//
+//== UPDATE ALL OF THE SETTINGS IN THE GAME AND SET VALUES IF UNDEFINED ==
 function updateSettings(){
     updatePlayerNames();
     updateWinningScore();
@@ -84,8 +87,6 @@ function updatePlayerNames(){
     document.getElementById('name-1').textContent = player1Name;
 }
 
-//------------------------------------------------------------------------------------//
-
 //== UPDATE THE WINNING SCORE OF THE GAME ==
 function updateWinningScore(){
     if(winningScore === undefined || winningScore < 25 || winningScore > 999){
@@ -94,8 +95,6 @@ function updateWinningScore(){
     
     document.querySelector('.header-text').textContent = `First Player to ${winningScore} Wins!`;
 }
-
-//------------------------------------------------------------------------------------//
 
 //== UPDATE THE TOGGLE SETTINGS OF THE GAME ==
 function updateToggleSettings(){
@@ -140,14 +139,14 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         diceDOM.style.display = 'block';
         diceDOM.src = 'dice-' + dice + '.png';
 
-        //3. Update the round score IF the rolled number was NOT a 1
-        if(dice !== 1){
-            //Add Score
+        //3. Update the round score if none of the rules are triggered
+        if((dice === 1) ||
+           (doubleSixMode && !twoDiceMode && lastRoll === 6 && dice === 6)){
+            switchPlayers();
+        }else{
             roundScore += dice;
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        }else{
-            //Next Player
-            switchPlayers();
+            lastRoll = dice;
         }
     }
 });
@@ -183,6 +182,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 function switchPlayers(){
     activePlayer === 0? activePlayer = 1 : activePlayer = 0;
     roundScore = 0;
+    lastRoll = 0;
 
     //Reset the round score of both players in the UI
     document.getElementById('current-0').textContent = 0;
