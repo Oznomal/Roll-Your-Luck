@@ -99,21 +99,19 @@ function updateWinningScore(){
 
 //== UPDATE THE TOGGLE SETTINGS OF THE GAME ==
 function updateToggleSettings(){
-    var twoDiceToggle, doubleSixToggle, highStakesToggle,
-        twoDiceLabel, doubleSixLabel, highStakesLabel;
+    var twoDiceLabel, doubleSixLabel, highStakesLabel;
 
+    //Set the mode to false if undefined or keep it the same if defined
     twoDiceMode = (twoDiceMode === undefined) ? false : twoDiceMode;
     doubleSixMode = (doubleSixMode === undefined) ? false : doubleSixMode;
     highStakesMode = (highStakesMode === undefined) ? false : highStakesMode;
 
-    twoDiceToggle = document.getElementById('toggle-number-of-dice');
-    doubleSixToggle = document.getElementById('toggle-double-six');
-    highStakesToggle = document.getElementById('toggle-high-stakes');
+    //Manipulate the switch within the UI
+    document.getElementById('toggle-number-of-dice').checked = (twoDiceMode) ? true : false;
+    document.getElementById('toggle-double-six').checked = (doubleSixMode) ? true : false;
+    document.getElementById('toggle-high-stakes').checked = (highStakesMode) ? true : false;
 
-    twoDiceToggle.checked = (twoDiceMode) ? true : false;
-    doubleSixToggle.checked = (doubleSixMode) ? true : false;
-    highStakesToggle.checked = (highStakesMode) ? true : false;
-
+    //Change the text content of the label based on the switch position
     twoDiceLabel = document.getElementById('number-of-dice-label');
     doubleSixLabel = document.getElementById('double-six-label');
     highStakesLabel = document.getElementById('high-stakes-label');
@@ -122,18 +120,9 @@ function updateToggleSettings(){
     doubleSixLabel.textContent = (doubleSixMode) ? 'Do it for the Six!' : 'Off';
     highStakesLabel.textContent = (highStakesMode) ? 'Riskssskyyy!' : 'Off';
 
-    if(!twoDiceMode){
-        twoDiceLabel.classList.remove('setting-on-label');
-    }
-
-    if(!doubleSixMode){
-        doubleSixLabel.classList.remove('setting-on-label');
-    }
-
-    if(!highStakesMode){
-        highStakesLabel.classList.remove('setting-on-label');
-    }
-
+    (twoDiceMode) ? twoDiceLabel.classList.add('setting-on-label') : twoDiceLabel.classList.remove('setting-on-label');
+    (doubleSixMode) ? doubleSixLabel.classList.add('setting-on-label') : doubleSixLabel.classList.remove('setting-on-label');
+    (highStakesMode) ? highStakesLabel.classList.add('setting-on-label') : highStakesLabel.classList.remove('setting-on-label');
 }
 
 
