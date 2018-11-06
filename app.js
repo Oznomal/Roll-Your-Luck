@@ -166,8 +166,16 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         if((dice1 === 1 || (twoDiceMode && dice2 === 1)) ||
             (!twoDiceMode && doubleSixMode && lastRoll === 6 && dice1 === 6) ||
             (twoDiceMode && dice1 === 6 && dice2 === 6)){
-
-            switchPlayers();
+            
+            //Pause the game for 1.5 seconds so the user can see why they lost
+            new Promise((resolve, reject) => {
+                setTimeout(() => { 
+                    toggleButtonDisabled();
+                    switchPlayers();
+                }, 1500);
+                
+                toggleButtonDisabled();
+            });
         }
         else{
 
@@ -191,6 +199,27 @@ function generateRandomDie(diceDOM){
     diceDOM.style.display = 'block';
     diceDOM.src = 'dice-' + random + '.png';
     return random;
+}
+
+//== TOGGLE BETWEEN DISABLING AND ENABLING THE GAME BUTTONS
+function toggleButtonDisabled(){
+    var newGameBtn, rollDiceBtn, holdBtn, settingsBtn, btnArr;
+    
+    newGameBtn = document.querySelector('.btn-new');
+    rollDiceBtn = document.querySelector('.btn-roll');
+    holdBtn = document.querySelector('.btn-hold');
+    settingsBtn = document.querySelector('.btn-settings');
+    
+    btnArr = [newGameBtn, rollDiceBtn, holdBtn, settingsBtn];
+    btnArr.forEach((button) => {
+        button.disabled = button.disabled ? false : true;
+        if(button.disabled){
+            button.classList.remove('btn-disabled');
+            button.classList.add('btn-disabled');
+        }else{
+            button.classList.remove('btn-disabled');
+        }
+    });
 }
 
 //------------------------------------------------------------------------------------//

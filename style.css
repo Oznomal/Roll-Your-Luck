@@ -137,6 +137,14 @@ button {
     transform: translateX(-50%);
 }
 
+.btn-disabled{ 
+    color: #bbb; 
+    cursor: default;
+}
+.btn-disabled i{ color: #FAD3D3; }
+.btn-disabled:hover{ font-weight: 300; }
+.btn-disabled:hover i{ margin-right: 15px; }
+
 button:hover { font-weight: 600; }
 button:hover i { margin-right: 20px; }
 
