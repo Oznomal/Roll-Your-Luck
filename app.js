@@ -49,7 +49,8 @@ function init(){
     updateSettings();
 
     //Hide the dice
-    document.querySelector('.dice').style.display = 'none';
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
 
     //Remove Winning and Active classes from both players
     document.querySelector('.player-0-panel').classList.remove('winner');
@@ -132,6 +133,7 @@ function updateToggleSettings(){
         dieOneDOM.classList.remove('single-die');
         dieOneDOM.classList.add('left-die');
         dieOneDOM.style.display = 'block';
+        dieTwoDOM.classList.add('right-die');
         dieTwoDOM.style.display = 'block';
         twoDiceLabel.classList.add('setting-on-label')
     }else{
@@ -150,27 +152,47 @@ function updateToggleSettings(){
 //== HANDLE THE ACTION WHEN THE ROLL BUTTON IS CLIKCED ==
 document.querySelector('.btn-roll').addEventListener('click', function(){
 
+    var diceOneDOM, diceTwoDOM, dice1, dice2;
+
     if(gamePlaying){
-        //1. We need a random number
-        var dice = Math.floor(Math.random() * 6) + 1;
+        dice1 = generateRandomDie(document.getElementById('dice-1'));
 
+        if(twoDiceMode){
+              dice2 = generateRandomDie(document.getElementById('dice-2'));
+        }
 
-        //2. Display the result
-        var diceDOM =  document.querySelector('.dice');
-        diceDOM.style.display = 'block';
-        diceDOM.src = 'dice-' + dice + '.png';
+        //Line 1: If a 1 is rolled in either single or doubles mode
+        //Line 2: If back to back 6's are rolled in single mode w/ double 6's enabled
+        //Line 3: If two 6's are rolled in doubles mode w/ double 6's enabled
+        if((dice1 === 1 || (twoDiceMode && dice2 === 1)) ||
+            (!twoDiceMode && doubleSixMode && lastRoll === 6 && dice === 6) ||
+            (twoDiceMode && dice1 === 6 && dice2 === 6)){
 
-        //3. Update the round score if none of the rules are triggered
-        if((dice === 1) ||
-           (doubleSixMode && !twoDiceMode && lastRoll === 6 && dice === 6)){
             switchPlayers();
-        }else{
-            roundScore += (highStakesMode && ++rollCount >= multiplierThreshhold) ? dice * 2 : dice;
+        }
+        else{
+
+            if(!twoDiceMode){
+                roundScore += (highStakesMode && ++rollCount >= multiplierThreshhold) ? dice1 * 2 : dice1;
+                lastRoll = doubleSixMode ? dice1 : lastRoll;
+            }
+            else{
+                const total = dice1 + dice2;
+                roundScore += (highStakesMode && ++rollCount >= multiplierThreshhold) ? total * 2 : total;
+            }
+
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
-            lastRoll = dice;
         }
     }
 });
+
+//== GENERATES THE RANDOM NUMBER FOR THE DIE TO USE ==
+function generateRandomDie(diceDOM){
+    var random = Math.floor(Math.random() * 6) + 1;
+    diceDOM.style.display = 'block';
+    diceDOM.src = 'dice-' + random + '.png';
+    return random;
+}
 
 //------------------------------------------------------------------------------------//
 
@@ -186,7 +208,8 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
         //3. Check if the player has won the game
         if(scores[activePlayer] >= winningScore){
             document.querySelector('#name-' + activePlayer).textContent = 'WINNER!';
-            document.querySelector('.dice').style.display = 'none';
+            document.getElementById('dice-1').style.display = 'none';
+            document.getElementById('dice-2').style.display = 'none';
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
             document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
             gamePlaying = false;
@@ -215,7 +238,8 @@ function switchPlayers(){
     document.querySelector('.player-1-panel').classList.toggle('active');
 
     //Hide the dice when switching players
-    document.querySelector('.dice').style.display = 'none';
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
 }
 
 //------------------------------------------------------------------------------------//
