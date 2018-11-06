@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,600" rel="stylesheet" type="text/css">
     <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
-    <link type="text/css" rel="stylesheet" href="style.css">
+    <link href="style.css" type="text/css" rel="stylesheet" >
 
     <title>Roll Your Luck | The Game</title>
 </head>
@@ -31,7 +31,6 @@
     </div>
 
     <h2 class="header-text">
-        First Player to 50 Wins!
     </h2>
 
     <p class="sub-rules-text">Rolling a 1 resets your round score</p>
@@ -41,42 +40,75 @@
     <button class="btn-hold button-center"><i class="ion-ios-download-outline"></i>Hold</button>
     <button class="btn-settings button-center"><i class="ion-ios-toggle-outline"></i>Settings</button>
 
-    <img src="dice-5.png" alt="Dice" class="dice">
+    <img id="dice-1" src="dice-5.png" alt="Dice" class="dice single-die">
+    <img id="dice-2" src="dice-5.png" alt="Dice" class="dice">
 </div>
     
 <div class="modal-overlay" id="modal-overlay"></div>
 <div class="settings-modal">
-    <div class="settings-modal-content">
+    <div class="game-settings-form">
         <h2 class="header-text"><i class="ion-ios-toggle-outline settings-modal-icon"></i>Game Settings</h2>
-        <div class="game-settings-form">
+
+        <div class="settings-left-col">
             <div class="game-settings-form-row">
-                <label>Player 1 Name</label>
+                <label class="setting-label">Player 1 Name</label>
                 <br />
                 <input id="player-0-name" class="player-name-input"/>
             </div>
 
             <div class="game-settings-form-row">
-                <label>Player 2 Name</label>
+                <label class="setting-label">Player 2 Name</label>
                 <br/>
                 <input id="player-1-name" class="player-name-input"/>
             </div>
 
             <div class="game-settings-form-row">
-                <label>Winning Score</label>
+                <label class="setting-label">Winning Score</label>
                 <br/>
                 <input id="winning-score-input" class="small-input"/>
             </div>
+        </div>
+        <div class="settings-right-col">
+            <div class="game-settings-form-row">
+                <label class="setting-label">Number of Dice</label>
+                <br />
 
-            <div class="setting-buttons">
-                <button id="btn-cancel-game-settings" >Cancel</button>
-                <button id="btn-save-game-settings">Save</button>
+                <label class="switch double-option-slider">
+                    <input type="checkbox" id="toggle-number-of-dice">
+                    <span class="slider"></span>
+                </label>
+                <label class="slider-label-right" id="number-of-dice-label">1</label>
             </div>
+
+            <div class="game-settings-form-row">
+                <label class="setting-label">Double 6's</label>
+                <br/>
+                <label class="switch single-option-slider">
+                    <input type="checkbox" id="toggle-double-six">
+                    <span class="slider"></span>
+                </label>
+                <label class="slider-label-right" id="double-six-label">Off</label>
+
+            </div>
+
+            <div class="game-settings-form-row">
+                <label class="setting-label">High Stakes Mode</label>
+                <br/>
+                <label class="switch single-option-slider">
+                    <input type="checkbox" id="toggle-high-stakes">
+                    <span class="slider"></span>
+                </label>
+                <label class="slider-label-right" id="high-stakes-label">Off</label>
+            </div>
+        </div>
+
+        <div class="setting-buttons">
+            <button id="btn-cancel-game-settings" >Cancel</button>
+            <button id="btn-save-game-settings">Save</button>
         </div>
     </div>
 </div>
 
 <script src="app.js"></script>
 </body>
-
 </html>
-

@@ -17,7 +17,10 @@
 //----------------------------------------------------------------------------------------------------------//
 
 //== FIELDS ==
-var scores, roundScore, activePlayer, gamePlaying, settingsModal, player0Name, player1Name, winningScore;
+var scores, roundScore, activePlayer, gamePlaying,
+    settingsModal, player0Name, player1Name, winningScore,
+    twoDiceMode, doubleSixMode, highStakesMode,
+    lastRoll, rollCount, multiplierThreshhold;
 
 //------------------------------------------------------------------------------------//
 
@@ -31,6 +34,9 @@ function init(){
     scores = [0,0];
     roundScore = 0;
     activePlayer = 0;
+    lastRoll = 0;
+    rollCount = 0;
+    multiplierThreshhold = 5;
     settingsModal = document.querySelector('.settings-modal');
 
     //Set UI scores to 0
@@ -38,13 +44,13 @@ function init(){
     document.getElementById('score-1').textContent = '0';
     document.getElementById('current-0').textContent = '0';
     document.getElementById('current-1').textContent = '0';
-    
-    //Hide the dice
-    document.querySelector('.dice').style.display = 'none';
 
-    //Set the names of the players (to remnove 'WINNER' if needed)
-    updatePlayerNames();
-    updateWinningScore();
+    //Updates the game settings or sets undefined values to defaults if needed
+    updateSettings();
+
+    //Hide the dice
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
 
     //Remove Winning and Active classes from both players
     document.querySelector('.player-0-panel').classList.remove('winner');
@@ -57,9 +63,17 @@ function init(){
 
     //Set the state to true
     gamePlaying = true;
+    console.log(doubleSixMode, highStakesMode, twoDiceMode);
 }
 
 //------------------------------------------------------------------------------------//
+//== UPDATE ALL OF THE SETTINGS IN THE GAME AND SET VALUES IF UNDEFINED ==
+function updateSettings(){
+    updatePlayerNames();
+    updateWinningScore();
+    updateToggleSettings();
+}
+
 
 //== UPDATE THE NAMES OF THE PLAYERS WITHIN THE UI ==
 function updatePlayerNames(){
@@ -76,8 +90,6 @@ function updatePlayerNames(){
     document.getElementById('name-1').textContent = player1Name;
 }
 
-//------------------------------------------------------------------------------------//
-
 //== UPDATE THE WINNING SCORE OF THE GAME ==
 function updateWinningScore(){
     if(winningScore === undefined || winningScore < 25 || winningScore > 999){
@@ -87,29 +99,100 @@ function updateWinningScore(){
     document.querySelector('.header-text').textContent = `First Player to ${winningScore} Wins!`;
 }
 
+//== UPDATE THE TOGGLE SETTINGS OF THE GAME ==
+function updateToggleSettings(){
+    var twoDiceLabel, doubleSixLabel, highStakesLabel, dieOneDOM, dieTwoDOM;
+
+    //Set the mode to false if undefined or keep it the same if defined
+    twoDiceMode = (twoDiceMode === undefined) ? false : twoDiceMode;
+    doubleSixMode = (doubleSixMode === undefined) ? false : doubleSixMode;
+    highStakesMode = (highStakesMode === undefined) ? false : highStakesMode;
+
+    //Manipulate the switch within the UI
+    document.getElementById('toggle-number-of-dice').checked = (twoDiceMode) ? true : false;
+    document.getElementById('toggle-double-six').checked = (doubleSixMode) ? true : false;
+    document.getElementById('toggle-high-stakes').checked = (highStakesMode) ? true : false;
+
+    //Change the text content of the label based on the switch position
+    twoDiceLabel = document.getElementById('number-of-dice-label');
+    doubleSixLabel = document.getElementById('double-six-label');
+    highStakesLabel = document.getElementById('high-stakes-label');
+
+    dieOneDOM = document.getElementById('dice-1');
+    dieTwoDOM = document.getElementById('dice-2');
+
+    twoDiceLabel.textContent = (twoDiceMode) ? '2 is always better!' : '1';
+    doubleSixLabel.textContent = (doubleSixMode) ? 'Do it for the Six!' : 'Off';
+    highStakesLabel.textContent = (highStakesMode) ? 'Riskssskyyy!' : 'Off';
+
+    (doubleSixMode) ? doubleSixLabel.classList.add('setting-on-label') : doubleSixLabel.classList.remove('setting-on-label');
+    (highStakesMode) ? highStakesLabel.classList.add('setting-on-label') : highStakesLabel.classList.remove('setting-on-label');
+
+    //Add two dice to the UI if 2 dice mode is enabled
+    if(twoDiceMode){
+        dieOneDOM.classList.remove('single-die');
+        dieOneDOM.classList.add('left-die');
+        dieOneDOM.style.display = 'block';
+        dieTwoDOM.classList.add('right-die');
+        dieTwoDOM.style.display = 'block';
+        twoDiceLabel.classList.add('setting-on-label')
+    }else{
+        dieOneDOM.classList.remove('left-die');
+        dieOneDOM.classList.remove('single-die');
+        dieOneDOM.classList.add('single-die');
+        dieOneDOM.style.display = 'block';
+        dieTwoDOM.style.display = 'none';
+        twoDiceLabel.classList.remove('setting-on-label');
+    }
+
+}
+
+//------------------------------------------------------------------------------------//
+
 //== HANDLE THE ACTION WHEN THE ROLL BUTTON IS CLIKCED ==
 document.querySelector('.btn-roll').addEventListener('click', function(){
 
+    var diceOneDOM, diceTwoDOM, dice1, dice2;
+
     if(gamePlaying){
-        //1. We need a random number
-        var dice = Math.floor(Math.random() * 6) + 1;
+        dice1 = generateRandomDie(document.getElementById('dice-1'));
 
-        //2. Display the result
-        var diceDOM =  document.querySelector('.dice');
-        diceDOM.style.display = 'block';
-        diceDOM.src = 'dice-' + dice + '.png';
+        if(twoDiceMode){
+              dice2 = generateRandomDie(document.getElementById('dice-2'));
+        }
 
-        //3. Update the round score IF the rolled number was NOT a 1
-        if(dice !== 1){
-            //Add Score
-            roundScore += dice;
-            document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        }else{
-            //Next Player
+        //Line 1: If a 1 is rolled in either single or doubles mode
+        //Line 2: If back to back 6's are rolled in single mode w/ double 6's enabled
+        //Line 3: If two 6's are rolled in doubles mode w/ double 6's enabled
+        if((dice1 === 1 || (twoDiceMode && dice2 === 1)) ||
+            (!twoDiceMode && doubleSixMode && lastRoll === 6 && dice === 6) ||
+            (twoDiceMode && dice1 === 6 && dice2 === 6)){
+
             switchPlayers();
+        }
+        else{
+
+            if(!twoDiceMode){
+                roundScore += (highStakesMode && ++rollCount >= multiplierThreshhold) ? dice1 * 2 : dice1;
+                lastRoll = doubleSixMode ? dice1 : lastRoll;
+            }
+            else{
+                const total = dice1 + dice2;
+                roundScore += (highStakesMode && ++rollCount >= multiplierThreshhold) ? total * 2 : total;
+            }
+
+            document.querySelector('#current-' + activePlayer).textContent = roundScore;
         }
     }
 });
+
+//== GENERATES THE RANDOM NUMBER FOR THE DIE TO USE ==
+function generateRandomDie(diceDOM){
+    var random = Math.floor(Math.random() * 6) + 1;
+    diceDOM.style.display = 'block';
+    diceDOM.src = 'dice-' + random + '.png';
+    return random;
+}
 
 //------------------------------------------------------------------------------------//
 
@@ -125,7 +208,8 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
         //3. Check if the player has won the game
         if(scores[activePlayer] >= winningScore){
             document.querySelector('#name-' + activePlayer).textContent = 'WINNER!';
-            document.querySelector('.dice').style.display = 'none';
+            document.getElementById('dice-1').style.display = 'none';
+            document.getElementById('dice-2').style.display = 'none';
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
             document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
             gamePlaying = false;
@@ -142,6 +226,8 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 function switchPlayers(){
     activePlayer === 0? activePlayer = 1 : activePlayer = 0;
     roundScore = 0;
+    lastRoll = 0;
+    rollCount = 0;
 
     //Reset the round score of both players in the UI
     document.getElementById('current-0').textContent = 0;
@@ -152,7 +238,8 @@ function switchPlayers(){
     document.querySelector('.player-1-panel').classList.toggle('active');
 
     //Hide the dice when switching players
-    document.querySelector('.dice').style.display = 'none';
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
 }
 
 //------------------------------------------------------------------------------------//
@@ -171,9 +258,51 @@ document.querySelector('.btn-settings').addEventListener('click', function(){
     document.getElementById('player-0-name').focus();
 });
 
-//== HANDLE ACTION WHEN THE CANCEL BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
-document.getElementById('btn-cancel-game-settings').addEventListener('click', function(){
-    closeModal(settingsModal);
+//== HANDLE WHEN NUMBER OF DICE IS TOGGLED IN THE SETTINGS MENU ==
+document.getElementById('toggle-number-of-dice').addEventListener('click', function(){
+    var label;
+
+    label = document.getElementById('number-of-dice-label');
+
+    if(document.getElementById('toggle-number-of-dice').checked){
+        label.textContent = '2 is always better!'
+    }else{
+        label.textContent = '1';
+    }
+
+    label.classList.toggle('setting-on-label');
+});
+
+
+//== HANDLE WHEN DOUBLE SIX'S IS TOGGLED IN THE SETTINGS MENU ==
+document.getElementById('toggle-double-six').addEventListener('click', function(){
+    var label;
+
+    label = document.getElementById('double-six-label');
+
+    if(document.getElementById('toggle-double-six').checked){
+        label.textContent = 'Do it for the Six!'
+    }else{
+        label.textContent = 'Off';
+    }
+
+    label.classList.toggle('setting-on-label');
+});
+
+
+//== HANDLE WHEN HIGH STAKES MODE IS TOGGLED IN THE SETTINGS MENU ==
+document.getElementById('toggle-high-stakes').addEventListener('click', function(){
+    var label;
+
+    label = document.getElementById('high-stakes-label');
+
+    if(document.getElementById('toggle-high-stakes').checked){
+        label.textContent = 'Riskssskyyy!'
+    }else{
+        label.textContent = 'Off';
+    }
+
+    label.classList.toggle('setting-on-label');
 });
 
 //== HANDLE ACTION WHEN THE SAVE BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
@@ -192,6 +321,9 @@ function saveGameSettings(){
     player0Name = document.getElementById('player-0-name').value;
     player1Name = document.getElementById('player-1-name').value;
     winningScore = document.getElementById('winning-score-input').value;
+    twoDiceMode = document.getElementById('toggle-number-of-dice').checked;
+    doubleSixMode = document.getElementById('toggle-double-six').checked;
+    highStakesMode = document.getElementById('toggle-high-stakes').checked;
     
     //Reset the Input Values
     document.getElementById('player-0-name').value = "";
@@ -202,6 +334,12 @@ function saveGameSettings(){
     init();
     closeModal(settingsModal);
 }
+
+//== HANDLE ACTION WHEN THE CANCEL BUTTON IS CLICKED WITHIN THE SETTINGS MODAL ==
+document.getElementById('btn-cancel-game-settings').addEventListener('click', function(){
+    updateToggleSettings();
+    closeModal(settingsModal);
+});
 
 
 //------------------------------------------------------------------------------------//
@@ -216,4 +354,3 @@ function closeModal(modal){
     modal.style.display = 'none';
 }
 //------------------------------------------------------------------------------------//
-
