@@ -63,7 +63,6 @@ function init(){
 
     //Set the state to true
     gamePlaying = true;
-    console.log(doubleSixMode, highStakesMode, twoDiceMode);
 }
 
 //------------------------------------------------------------------------------------//
@@ -165,7 +164,7 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         //Line 2: If back to back 6's are rolled in single mode w/ double 6's enabled
         //Line 3: If two 6's are rolled in doubles mode w/ double 6's enabled
         if((dice1 === 1 || (twoDiceMode && dice2 === 1)) ||
-            (!twoDiceMode && doubleSixMode && lastRoll === 6 && dice === 6) ||
+            (!twoDiceMode && doubleSixMode && lastRoll === 6 && dice1 === 6) ||
             (twoDiceMode && dice1 === 6 && dice2 === 6)){
 
             switchPlayers();
