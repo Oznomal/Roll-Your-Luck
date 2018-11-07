@@ -51,6 +51,7 @@ function init(){
     //Hide the dice
     document.getElementById('dice-1').style.display = 'none';
     document.getElementById('dice-2').style.display = 'none';
+    document.querySelector('.feedback-text').textContent = '';
 
     //Remove Winning and Active classes from both players
     document.querySelector('.player-0-panel').classList.remove('winner');
@@ -157,27 +158,50 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         dice1 = generateRandomDie(document.getElementById('dice-1'));
 
         if(twoDiceMode){
-              dice2 = generateRandomDie(document.getElementById('dice-2'));
+            dice2 = generateRandomDie(document.getElementById('dice-2'));
         }
 
-        //Line 1: If a 1 is rolled in either single or doubles mode
-        //Line 2: If back to back 6's are rolled in single mode w/ double 6's enabled
-        //Line 3: If two 6's are rolled in doubles mode w/ double 6's enabled
-        if((dice1 === 1 || (twoDiceMode && dice2 === 1)) ||
-            (!twoDiceMode && doubleSixMode && lastRoll === 6 && dice1 === 6) ||
-            (twoDiceMode && dice1 === 6 && dice2 === 6)){
+        //Condition 1: If a 1 is rolled in single mode or double 1's are rolled in doubles
+        if(dice1 === 1 || (twoDiceMode && dice1 === 1 && dice2 === 1)){
+            //Pause the game for 1.5 seconds so the user can see why they lost
+            new Promise((resolve, reject) => {
+                setTimeout(() => { 
+                    toggleButtonDisabled();
+                    switchPlayers();
+                }, 1500);
+                
+                toggleButtonDisabled();
+                document.querySelector('.feedback-text').textContent = 'NEXT PLAYER!';
+            });
+        }
+        else if((!twoDiceMode && doubleSixMode && lastRoll === 6 && dice1 === 6) || 
+                   (twoDiceMode && dice1 === 6 && dice2 === 6)){
+                        
+            //Pause the game for 1.5 seconds so the user can see why they lost
+            new Promise((resolve, reject) => {
+                setTimeout(() => { 
+                    toggleButtonDisabled();
+                    switchPlayers();
+                }, 1500);
+                
+                
+                scores[activePlayer] = 0;
+                document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
-            switchPlayers();
+                toggleButtonDisabled();
+                document.querySelector('.feedback-text').textContent = 'NEXT PLAYER!';
+            });
         }
         else{
-
             if(!twoDiceMode){
                 roundScore += (highStakesMode && ++rollCount >= multiplierThreshhold) ? dice1 * 2 : dice1;
                 lastRoll = doubleSixMode ? dice1 : lastRoll;
+                document.querySelector('.feedback-text').textContent = dice1;
             }
             else{
                 const total = dice1 + dice2;
                 roundScore += (highStakesMode && ++rollCount >= multiplierThreshhold) ? total * 2 : total;
+                document.querySelector('.feedback-text').textContent = total;
             }
 
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
@@ -191,6 +215,27 @@ function generateRandomDie(diceDOM){
     diceDOM.style.display = 'block';
     diceDOM.src = 'dice-' + random + '.png';
     return random;
+}
+
+//== TOGGLE BETWEEN DISABLING AND ENABLING THE GAME BUTTONS
+function toggleButtonDisabled(){
+    var newGameBtn, rollDiceBtn, holdBtn, settingsBtn, btnArr;
+    
+    newGameBtn = document.querySelector('.btn-new');
+    rollDiceBtn = document.querySelector('.btn-roll');
+    holdBtn = document.querySelector('.btn-hold');
+    settingsBtn = document.querySelector('.btn-settings');
+    
+    btnArr = [newGameBtn, rollDiceBtn, holdBtn, settingsBtn];
+    btnArr.forEach((button) => {
+        button.disabled = button.disabled ? false : true;
+        if(button.disabled){
+            button.classList.remove('btn-disabled');
+            button.classList.add('btn-disabled');
+        }else{
+            button.classList.remove('btn-disabled');
+        }
+    });
 }
 
 //------------------------------------------------------------------------------------//
@@ -209,6 +254,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
             document.querySelector('#name-' + activePlayer).textContent = 'WINNER!';
             document.getElementById('dice-1').style.display = 'none';
             document.getElementById('dice-2').style.display = 'none';
+            document.querySelector('.feedback-text').textContent = '';
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
             document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
             gamePlaying = false;
@@ -239,6 +285,7 @@ function switchPlayers(){
     //Hide the dice when switching players
     document.getElementById('dice-1').style.display = 'none';
     document.getElementById('dice-2').style.display = 'none';
+    document.querySelector('.feedback-text').textContent = '';
 }
 
 //------------------------------------------------------------------------------------//
