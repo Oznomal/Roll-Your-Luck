@@ -162,7 +162,7 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         }
 
         //Condition 1: If a 1 is rolled in single mode or double 1's are rolled in doubles
-        if(dice1 === 1 || (twoDiceMode && dice1 === 1 && dice2 === 1)){
+        if((dice1 === 1 && !twoDiceMode) || (twoDiceMode && dice1 === 1 && dice2 === 1)){
             //Pause the game for 1.5 seconds so the user can see why they lost
             new Promise((resolve, reject) => {
                 setTimeout(() => { 
